@@ -293,13 +293,15 @@ Characterization
 <br />plot out vs in
 
 <br />Standard cell design and characterization using openlane flow
+
 <br />CMOS Inverter Design using Magic
+
 <br />Magic Tool offers a very user-friendly interface for designing the different layers of the layout. Additionally, it features a built-in DRC check feature.
 To Clone vsdstdcelldesign Folder from Github:
 <br />•	This will create "vsdstdcelldesign" directory which contain the sky130_inv.mag and from there we will do post layout simulation.
 <br />•	The technology file which is used as an input is sky130A.tech.
 <br />To Copy sky130A.tech file  to folder vsdstdcelldesign:
-<br />divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic$ cp sky130A.tech /home/divyadstvm/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign/
+<br />divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign/
 <br />To invoke .tech and .mag files to open magic:
 <br />divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign$ magic -T sky130A.tech sky130_inv.mag &
 <br />-T <address_of_sky130A.tech_file> where T is for technology file. Here we use not lef read or def read as in for .def or .lef file because .mag is not a standard industry file). & is use to free the next command prompt.
