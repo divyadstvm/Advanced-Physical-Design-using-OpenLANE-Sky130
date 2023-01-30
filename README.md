@@ -336,81 +336,42 @@ Characterization
 ![ ](Images/45.png)
 <br />Zoom in view of Plots got after ngspice simulation
 ![ ](Images/46.png)
+
 <br />Task3:
 <br />1)	Find CELL FALL TRANSITION
-<br />80% of 3.3v = 2.64v  : x0 = 1.00, y0 =2.65
-<br />20% of 3.3v = 0.66v: x0 = 1.01, y0=0.66
+<br />80% of 3.3v = 2.64v  : x0 = 1.00e-9, y0 =2.65
+<br />20% of 3.3v = 0.66v: x0 = 1.01e-9, y0=0.66
 <br />Cell fall transition = 1.01-1.00=0.01
 
-<br />1)	CELL FALL DELAY
+<br />2)FIND CELL FALL DELAY
+<br />x0 = 4.07685e-09, y0 =1.65242
+<br />x0 = 4.04954e-09, y0=1.65161
+<br />Cell Fall Delay=4.076 – 4.049 = 0.027
 
-<br />=4.076 – 4.049 = 0.027
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+<br />So now we have characterized our inverter. The next goal is to make a .lef file using this inverter architecture. We will create a unique cell by plugging this .lef into openlane and plugin in this cell into our picorv32a core.
 
 <br /> •	Day 4 - Pre-layout timing analysis and importance of good clock tree
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+<br />Delay
+<br />Problem:
+<br />•	The capacitance or the load at the output node of each and every buffer in the complete clock tree is varying.
+<br />•	Also if the load is varying the input transition is varying.
+![ ](Images/47.png)
 
-<br /> •	Day 5 – Final Steps for RTL2GDS using TritonRoute and OpenSTA
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+<br />Timing modelling using delay tables
+
+<br />Timing Analysis
+<br />First we take the ideal clock (clock tree is not yet build) and do the timing analysis with it. After that we will do with real clock.
+<br />Pre-layout timing analysis (using ideal clock)
+<br />•	SETUP TIMING ANALYSIS. Specifications Clock frequency = 1GHz and period of 1ns.
+<br />We have a launch flop and capture flop and in between we the the combinational logic. We have ideal clock network i.e., clock tree is not yet built. Hence we do not have any buffer in the clock path. This is a typical scenario for hold time and setup time calculation. We send the 1st riseing clock to the launch flop (t=0ns) and the 2nd rising to the capture flop (t=1ns).
+![ ](Images/48.png)
+<br />The equation for setup time is:
+<br />Θ < T - S – SU First basic insight is the setup delay should be less than the combinational delay. Then analysing the capture flop we see some delay due to the mux. due to jitter there is delay in the exact point of clock arrival and this variation is due to internal clock circuitary (PLL).
+<br />where.
+<br />•	Θ = Combinational delay which includes clk to Q delay of launch flop and internal propagation delay of all gates between launch and capture flop
+<br />•	T = Time period, also called the required time
+<br />•	S = Setup time. As demonstrated below, signal must settle on the middle (input of Mux 2) before clock tansists to 1 so the delay due to Mux 1 must be considered, this delay is the setup time.
+<br />•	SU = Setup uncertainty due to jitter which is temporary variation of clock period. This is due to non-idealities of PLL/clock source.
+<br />NOTE: Things are different for hold time.
+<br />We have, T = 1000 ps, S = 10 ps, U = 90 ps Hence we arrive at Θ < 0.9 ns (for our case)
 
