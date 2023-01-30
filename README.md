@@ -296,7 +296,6 @@ Characterization
 <br />CMOS Inverter Design using Magic
 <br />Magic Tool offers a very user-friendly interface for designing the different layers of the layout. Additionally, it features a built-in DRC check feature.
 To Clone vsdstdcelldesign Folder from Github:
-divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/openlane$ git clone https://github.com/nickson-jose/vsdstdcelldesign.git
 <br />•	This will create "vsdstdcelldesign" directory which contain the sky130_inv.mag and from there we will do post layout simulation.
 <br />•	The technology file which is used as an input is sky130A.tech.
 <br />To Copy sky130A.tech file  to folder vsdstdcelldesign:
