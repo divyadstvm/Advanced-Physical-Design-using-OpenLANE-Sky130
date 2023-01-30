@@ -17,7 +17,7 @@ This repository contains the details of steps followed and summary of hands on d
 
 o	Talk to Computers 
 The below figure shows the Block diagram of a System on a Chip.
-![ ](Images/1.png)
+
 
 <br /> •	Day 2: Good Floorplan vs bad Floorplan and Introduction to Library Cells
 <br /> •	Day 3 - Design library cell using Magic Layout and ngspice characterization
