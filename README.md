@@ -268,26 +268,83 @@ Characterization
 <br />![ ](Images/34.png)
 
 <br /> •	Day 3 - Design library cell using Magic Layout and ngspice characterization
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+<br />To go in depth of one of the cells(inverter cell), we won't build it from scratch rather we would use the github to get the .mag(magic) files and from there we will be doing Post Layout simulation in ngspice and post characterizing our sample cell, we would be plugging this cell into a OpenLANE flow, into picorv32a core.
+<br />NOTE - In IO placement in floorplan
+<br />On OpenLANE, configurations can be modified while in flight. On OpenLANE, for instance, use % set ::env(FP_IO_MODE) 2 to make IO mode not equidistant. On mode 2, the IO pins won't be evenly spaced out (default of 1). View the def layout for magic by launching floorplan once more with % run floorplan. The configuration will only be available for the current session if it is changed on the fly; it will not be changed in runs/config.tcl, echo $::env(FP_IO_MODE) to output the variable's most recent value.
+<br />SPICE deck creation for CMOS inverter
+<br />First we need to design the library cells:
+<br />•	The CMOS inverter's SPICE deck represents component connections (essentially a netlist).
+<br />•	SPICE deck values equal the W/L value (0.375u/0.25u), which denotes a width of 375nm and a length of 250nm. PMOS should to be 2 or 3 times broader in width than NMOS. Typically, the gate and supply voltages are multiples of length (in the example, gate voltage can be 2.5V)
+<br />•	Place nodes around each component and give it a name. In SPICE, a component can be identified using this.
+<br />SPICE Deck Netlist Description
+<br />![ ](Images/35.png)
+<br />•	PMOS and NMOS descriptor syntax
+<br />o	[component name] [drain] [gate] [source] [substrate] [transistor type] W=[width] L=[length]
+<br />•	Based on nodes and their values, all components are described.
+<br />SIMULATION COMMANDS
+<br />•	.op .dc Vin 0 2.5 0.05 is the start of SPICE simulation operation where Vin will be sweep from 0 to 2.5 with 0.05 steps
+<br />•	tsmc_025um_model.mod is the model file which contain the technological parameters of the 0.25um NMOS and PMOS Devices.
+<br />Labs for CMOS inverter ngspice simulations
+<br />Steps to simulate in SPICE:
+<br />source [filename].cir
+<br />run
+<br />setplot 
+<br />dc1 
+<br />plot out vs in
+
+<br />Standard cell design and characterization using openlane flow
+<br />CMOS Inverter Design using Magic
+<br />Magic Tool offers a very user-friendly interface for designing the different layers of the layout. Additionally, it features a built-in DRC check feature.
+
+<br />To Clone vsdstdcelldesign Folder from Github:
+<br />divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/openlane$ git clone https://github.com/nickson-jose/vsdstdcelldesign.git
+<br />•	This will create "vsdstdcelldesign" directory which contain the sky130_inv.mag and from there we will do post layout simulation.
+<br />•	The technology file which is used as an input is sky130A.tech.
+<br />To Copy sky130A.tech file  to folder vsdstdcelldesign:
+<br />divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic$ cp sky130A.tech /home/divyadstvm/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign/
+<br />To invoke .tech and .mag files to open magic:
+<br />divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/openlane/vsdstdcelldesign$ magic -T sky130A.tech sky130_inv.mag &
+<br />-T <address_of_sky130A.tech_file> where T is for technology file. Here we use not lef read or def read as in for .def or .lef file because .mag is not a standard industry file). & is use to free the next command prompt.
+<br />•	NOTE If address of the required file is at the same working loaction then we just need to provide the required file name.
+
+<br />Layout of the CMOS Inveter in magic
+![ ](Images/36.png)
+<br />Highlighted Section of CMOS inverter in magic shows as nmos in tkcon:
+![ ](Images/37.png)
+<br />To see the connection between 2 parts of a layout, click S thrice. Fig shows o/p,Y connected to Drain of both pmos & nmos.
+![ ](Images/38.png)
+<br />Characterizing the cell's(CMOS Inverter) slew rate and propagation delay
+<br />Now to know the logical functioning of the inverte we extrace the spice and do simulation in ngspice open source tool.
+<br />vsdstdcelldesign folder files before extracting ngspice:
+![ ](Images/39.png)
+
+<br />Extracting ngspice :
+<br />Steps to extrace the spice file from magic
+<br />•	Use thie command extract all to create an .ext(extraction) file.
+<br />•	Use this command ext2spice cthresh 0 rthresh 0 then ext2spice to create the .spice file from .ext file, to be used with our ngspice tool and also extrace all the paracitic capacitances.
+![ ](Images/40.png)
+![ ](Images/41.png)
+
+<br />SPICE File sky130_inv.spice is created inside Folder vsdstdcelldesign as below:
+![ ](Images/42.png)
+<br />sky130_inv.spice file extraced from magic
+![ ](Images/43.png)
+<br />We then modify the sky130_inv.spice file as shown below to be able to plot a transient response:
+<br />NOTE To edit vim file in linux press i and make the changes then press Esc and the :wq! to save the changes
+<br />SPICE SIMULATION OF CMOS
+![ ](Images/44.png)
+![ ](Images/45.png)
+<br />Zoom in view of Plots got after ngspice simulation
+![ ](Images/46.png)
+<br />Task3:
+<br />1)	Find CELL FALL TRANSITION
+<br />80% of 3.3v = 2.64v  : x0 = 1.00, y0 =2.65
+<br />20% of 3.3v = 0.66v: x0 = 1.01, y0=0.66
+<br />Cell fall transition = 1.01-1.00=0.01
+
+<br />1)	CELL FALL DELAY
+
+<br />=4.076 – 4.049 = 0.027
 <br />
 <br />
 <br />
