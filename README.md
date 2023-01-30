@@ -156,42 +156,116 @@ o	Streaming out the final GDSII layout file from the routed def (Magic).
 <br />Synthesis Report showing No: of Cells  = 14876
 ![ ](Images/18.png)
 ![ ](Images/19.png)
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+
 <br /> •	Day 2: Good Floorplan vs bad Floorplan and Introduction to Library Cells
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+<br />The placement of logical blocks, library cells, and pins on a silicon chip is known as chip floorplanning. It ensures that every module has been given the proper area and aspect ratio, that every pin of the module is connected to another module or the chip's edge, and that modules are placed so that they take up the least amount of space on a chip.
+<br />1.	The height and width of core and die
+<br />•	The core, which is located in the middle of the die, is where the logic blocks are placed. The dimensions of each standard cell on the netlist determine the width and height of Core.
+![ ](Images/20.png)
+<br />•	Utilization Factor is defined as the ratio of area of occupancy by the netlist to total area of the core. Utilization factor in a realistic situation is between 0.5 and 0.6. Only this space is used for the netlist; the rest space is used for routing and more extra cells.
+<br />•	Aspect Ratio is defined as the ratio between height and the width of core.
+<br />2.	The location of Preplaced Cell
+<br />•	These are complex logic blocks that are previously implemented but can be reused, such as memory, clock-gating cells, muxes, comparator, etc. Prior to placement and routing, the user-defined placement on the core must be completed (thus preplaced cells).
+<br />•	This needs to be very well described because the automated place and route tools won't be able to touch or move these preplaced cells.
+<br />3.	Surround preplaced cells with decoupling capacitors
+<br />•	The complex preplaced logic block needs a lot of current from the power supply to switch the current. However, due to the resistance and inductance of the wire, there will be a voltage drop because of the distance between the main power supply and the logic block. As a result, the voltage at the logic block might no longer fall within the noise margin range (logic is unstable).
+<br />•	Utilizing decoupling capacitors which are hudge bunch of capacitor completely filled with charge, close to the logic block will provide the necessary current for the logic block to switch inside the desired noise margin range.
+![ ](Images/21.png)
+<br />4.	Power Planning
+<br />•	It is not possible to apply a decoupling capacitor for sourcing logic blocks with enough current throughout the entire chip, only on the important components (preplaced complex logicblocks).
+<br />•	Due to the large amount of current that must be sinked simultaneously when a large number of elements switch from logic 1 to logic 0, this could result in ground bounce, and switching from logic 0 to logic 1 could result in voltage droop because there is not enough current from the power source to source the needed current for all elements. The increase or decrease in voltage may not be within the noise margin range due to voltage droop and ground bounce.
+<br />•	The reason for problem of voltage droop and ground bounce is because the supply has been provided only from one point so we use multiple power source taps (power mesh) are the solution, allowing components to source current from the closest VDD tap and sink current to the closest VSS tap. The majority of processors include several powersource pins because of this.
+![ ](Images/22.png)
+<br />5.	Pin Placement
+<br />•	The area between the core and the die is where the input and output ports are located.
+<br />•	The positions of the ports depend on the placements of the cells that are connected with them on the core.
+<br />•	Since this clock must be able to drive the entire chip so the clock pin is thicker (lowest resistance route) than data ports.
+![ ](Images/23.png)
+<br />6.	Logical Cell Placement Blockage
+<br />This ensures that no cells are placed by the automated placement and routing tool on the die's pin locations.
+![ ](Images/24.png)
+<br />Floorplanning using OpenLANE
+<br />Steps to run and view Floorplan using OpenLANE
+<br />•	The configuration variables or switches must be set up before to starting the floorplan stage..
+<br />•	The configuration variables location is
+<br />Step 1: Running floorplan
+<br />•	We have lot of switches with which we adjust the flow directory. These switches are used to set certain parameter in each stage of the flow. For eg: In the Floorplanning stage we have FP_CORE_UTIL {for utilization percentage}, FP_ASPECT_RATIO {sets the aspect ratio}, FP_CORE_MARGINS {offset b/w die boundary and core boundary}, etc. We have certain .tcl file in OpenLane which has these switchs that sets these specifications.
+<br />•	The command to run floorplan is:
+<br />% run_floorplan
+<br />Step 2: Review floorplan files and steps to view floorplan
+<br />•	Reviewing files
+
+<br />TASK 2: Calculating the die area
+
+<br />Solution of Task:
+<br />DIE AREA(00)(660685  671405)
+<br />Area of Chip = 660.685 / 671.405 = 0.984 um2
+<br />The report showing die area is shown below:
+![ ](Images/25.png)
+<br />ioPlacer.log defines the metal layers for the I/Os.
+<br />Step 3: Review floorplan layout in Magic
+<br />•	Using Magic tool to view the def file
+<br />The following command can be used to invoke magic tool as well as to open the def file:
+<br />divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/25-01_17-19/results/floorplan$magic -T /home/divyadstvm/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.floorplan.def &
+<br />The generated floorplan layout is shown below:
+![ ](Images/26.png)
+<br />To center the view, press "s" to select whole die then press "v" to center the view. Point the cursor to a cell then press "s" to select it, zoom into it by pressing 'z". 
+<br />Zoom in view of floorplan :
+![ ](Images/27.png)
+<br />Zoom in view of Standard CellArea:
+![ ](Images/28.png)
+<br />tkcon console :
+<br />Type "what" in tkcon to display information of selected object. These objects might be IO pin, decap cell, or well taps as shown below.
+![ ](Images/29.png)
+<br />Placement using OpenLANE
+<br />Steps to run and view Placement using OpenLANE
+<br />After floorplanning, next comes placement, it determines location of each of the components on the die. 
+<br />Step 1: Running Placement
+<br />•	The command to run Placement is:
+<br />•	%run_placement
+
+<br />View the placement in magic
+<br />For visualising the layout following a placement, use the Magic Layout Tool. The following three files are necessary in order to examine a floor layout in Magic
+<br />•	Technology File sky130A.tech
+<br />•	Merged LEF file merged.lef
+<br />•	vim picorv32a.floorplan.def files
+
+<br />To open layout in magic use this command in this location:
+<br />divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/26-01_19-15/results/placement$ magic -T /home/divyadstvm/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def &
+<br />-T <address_of_sky130A.tech_file> where T is for technology file lef read <address_of_merged.lef_file> to read the lef files (we use lef read because its a standard industry file) def read <address_of_picorv32a.placement.def_file> to read the def files (we use def read because its a standard industry file)
+
+<br />NOTE
+<br />•	 If address of the required file is at the same working location then we just need to provide the required file name. 
+<br />•	This sky130A.tech(technology), merged.lef(layout exchange format) and picorv32a.placement.def(design exchange format) files comes along with the pdk of sky130.
+
+<br />The generated floorplan layout is shown below:
+![ ](Images/30.png)
+<br />Zoom in view of Placement :
+![ ](Images/31.png)
+<br />Zoom in view of Placement :
+![ ](Images/32.png)
+
+<br />Cell Design Flow
+<br />•	In Cell design we will look at how a standard cell is designed in the library
+<br />![ ](Images/33.png)
+<br />•	Cell height has been defined as the seperation between power and the ground rail and it is the responsibilty of the cell develepor that cell height is mantained. Cell height depends on the timing information(if the cell height is high then it would be able to drive more longer wire, that is called higher drive strength cells)
+<br />•	The standard cells has to operate at a certain Supply Voltage which is being provided by the top level designer and accordingly the library developer has to take that supply voltage and design the library cell such that it specifies supply voltage.
+<br />•	Metal Layer, Pin Locations, Drawn Gate Length requirments has to be decided by the library developer.
+Characterization
+<br />•	Next step after we get the extraced step netlist and layout is characterization.
+<br />•	Characterization helps us to get timing, noise and power information.
+<br />•	The output of characterization is timing, noise, power.lib files and the functionality of this circuit.
+
+<br />Characterization Flow:
+<br />•	Read in the models files
+<br />•	Read the extraced spice netlist
+<br />•	Recognize the behaviour of the buffer
+<br />•	Read the sub circuits of the inverter
+<br />•	Attach the necessary power sources
+<br />•	Apply the stimulus
+<br />•	Provide the necessary output capacitances
+<br />•	Prove the necessary simulation commands
+<br />![ ](Images/34.png)
 
 <br /> •	Day 3 - Design library cell using Magic Layout and ngspice characterization
 <br />
