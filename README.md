@@ -116,9 +116,7 @@ o	Performing detailed routing (TritonRoute)
 o	Streaming out the final GDSII layout file from the routed def (Magic).
 
 <br />OpenLane Directory Hierarchy:
-
 <br />LAB Day1
-
 <br />Step1:Starting OpenLane
 <br />Go to openlane working directory
 <br />divyadstvm@vsd-pd-workshop-02:~/Desktop/work/tools/openlane_working_dir/openlane$ docker
@@ -132,7 +130,32 @@ o	Streaming out the final GDSII layout file from the routed def (Magic).
 <br />•	Then we need to import all the package that are required to run this program by package require openlane 0.9
 <br />•	NOTE Command to run fully automated run ./flow.tcl -design picorv32a
 <br />![ ](Images/16.png)
-<br />
+<br />Synthesis using OpenLANE:
+<br />Step 2: Design Preperation
+<br />•	Now we would be running our first step which is synthesis in openlane but before that we need to set the file system in the design setup stage which will be setting up the data for our data structure for our design.
+<br />•	For this, enter below command in openlane :
+<br />% prep -design picorv32a 
+<br />When it is done it will show:
+<br />[INFO]: Preparation complete
+<br />•	So after this the runs directory has been created into picorv32a directory under which folder structures required by the openlink will be created in which all the folders will be empty except tmp
+
+<br />Step 3: Running Synthesis
+<br />For this, enter below command in openlane :
+<br />% run_synthesis
+<br />When it is done it will show:
+<br />[INFO]: Synthesis was successful
+
+<br />TASK 1 : Finding the d flip flop ratio of the design created
+<br />Flop ratio is defined as the ratio of number of D flip flop to total number of cell.
+<br />Flop Ratio of design  = No: of D-FF / Total No: of cells
+<br />= sky130_fd_sc_hd_dfxt p-2 / No: of Cells  = 1613 / 14876 = 0.1084 = 10.84 %
+
+<br />Synthesis Report showing No: of D-FF = 1613 
+
+![ ](Images/17.png)
+<br />Synthesis Report showing No: of Cells  = 14876
+![ ](Images/18.png)
+![ ](Images/19.png)
 <br />
 <br />
 <br />
