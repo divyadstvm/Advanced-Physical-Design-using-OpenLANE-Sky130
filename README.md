@@ -28,8 +28,19 @@ The below figure shows the Block diagram of a System on a Chip.
 <br />
 ![ ](Images/3.png) 
 <br />•	Core - It is the place where all the logic units (gates, muxs, etc) are presnet inside the chip. These are able to execute the set of instructions given to the chip and produce an output.
-<br />•	Die - It is the block which consists of semiconducting material and it can be used to build certain functional cuircuit which can be further sent for fabrication. It is the entire size of the
+<br />•	Die - It is the block which consists of semiconducting material and it can be used to build certain functional cuircuit which can be further sent for fabrication. 
 ![ ](Images/4.png)
+<br /> There is difference between Macros and IPs. There are some files which foundry will give to us. With this, we can communicate with Foundry.
+<br />•	Consider macro cells as pieces of logic blocks, mainly intellectual properties (IP), which can be used in a design without the need to (of) building them from scratch.
+<br />•	Macro-cells in the integrated circuits (IC) design are large blocks which can be viewed as black-boxes. The logic and electronic behavior of these macro-cells are given but the inside structural description may or may not be known.
+<br />•	Standard-cells in the circuit have the same height and need to be placed in the specified rows. Macro-cells may be located anywhere inside the layout area. No overlap is allowed between any two cells (either macro and macro, standard and standard or macro and standard).
+<br />•	An Intellectual Property (IP) core in Semiconductors is a reusable unit of logic or functionality or a cell or a layout design that is normally developed with the idea of licencing to multiple vendor for using as building blocks in different chip designs
+
+
+From Software Applications to Hardware:
+
+![ ](Images/5.png)
+
 
 
 <br /> •	Day 2: Good Floorplan vs bad Floorplan and Introduction to Library Cells
