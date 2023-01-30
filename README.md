@@ -15,6 +15,8 @@ This repository contains the details of steps followed and summary of hands on d
 
 <br /> •	Day 1: Inception of open-source EDA, OpenLANE and Sky130 PDK
 
+o	Talk to Computers 
+The below figure shows the Block diagram of a System on a Chip.
 
 <br /> •	Day 2: Good Floorplan vs bad Floorplan and Introduction to Library Cells
 <br /> •	Day 3 - Design library cell using Magic Layout and ngspice characterization
